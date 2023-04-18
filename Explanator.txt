@@ -1,0 +1,212 @@
+This is a React web application done with React-typescript that allows users to create, edit, and delete notes. The application uses the React-Bootstrap library to style the user interface. 
+The React-Router-DOM library is used for routing between different pages.
+The application maintains two types of data: notes and tags. Each note has a unique ID, a title, some text, and one or more tags. Tags are used to categorize notes. 
+Each tag also has a unique ID and a label.
+
+
+
+
+
+
+main component:
+
+This is a basic example of how to render a React app using ReactDOM with React Router and in strict mode.
+ReactDOM.createRoot is a new method introduced in React 18, which creates a root-level rendering container for React. 
+It takes an element that represents the root of your component tree, and returns a root object. The render method on the root object is used to render the React element tree into the root DOM node.
+In this example, document.getElementById("root") is used to get a reference to the root DOM node of the app, and ReactDOM.createRoot is called with this node. 
+The render method of the returned root object is then called with the React element tree to be rendered.
+The React element tree in this case is wrapped in <React.StrictMode>. This is a component that can be used to highlight potential problems in an application. 
+It activates additional checks and warnings for its descendants, which can help to catch potential bugs and issues early in development.
+The <BrowserRouter> component is used from the react-router-dom package to enable client-side routing for the app. 
+This component sets up the browser's history API and provides routing functionality for the app.
+Finally, the <App> component is rendered within the <BrowserRouter> component. The <App> component is the top-level component of the app, which contains all the other components and routes.
+
+
+
+
+
+
+App component:
+
+The application's main component is the App component, which renders different components based on the current URL route. 
+The NoteList component is rendered when the URL is the root route ('/'). It displays a list of all the notes, along with the tags associated with each note. 
+Users can update or delete tags from this view.
+The NewNote component is rendered when the URL is '/new'. It displays a form for creating a new note. Users can enter a title, some text, and select one or more tags from a list of available tags. 
+When the form is submitted, a new note is created with a unique ID and added to the list of notes.
+The NoteLayout component is rendered when the URL contains a note ID (e.g. '/12345'). It displays the selected note and its associated tags. 
+The Note component is rendered by default and displays the note's title and text. The EditNote component is rendered when the URL contains '/edit'. 
+It displays a form similar to the NewNote component, but with the current note's data pre-populated. When the form is submitted, the note is updated with the new data.
+The useLocalStorage hook is used to persist the notes and tags data between browser sessions. 
+The useMemo hook is used to memoize the notesWithTags array, which is an array of all notes, each with its associated tags. 
+This helps optimize performance by only recalculating the array when the notes or tags state changes.
+
+Functions and state in App component:
+It uses a custom hook called useLocalStorage to store notes and tags in the browser's local storage, so that the data persists between page reloads. 
+The hook takes two arguments - a key to identify the stored data in local storage, and an initial value to use if the data is not already present in local storage.
+The component defines four state variables using the useLocalStorage hook - notes, tags, and notesWithTags, and setNotes. 
+The notes and tags variables hold arrays of notes and tags respectively. The notesWithTags variable is derived from the notes and tags variables using the useMemo hook, 
+which memoizes the result of a computation so that it is not re-executed unnecessarily. In this case, notesWithTags is an array of notes with their associated tags.
+The component also defines several functions that modify the state variables. 
+onCreateNote creates a new note with the specified data and adds it to the notes array. 
+onUpdateNote updates an existing note with the specified data. 
+onDeleteNote removes a note with the specified ID from the notes array. 
+addTag adds a new tag to the tags array. 
+updateTag updates the label of an existing tag with the specified ID. 
+deleteTag removes a tag with the specified ID from the tags array.
+These functions modify the state variables using the setNotes and setTags functions returned by the useLocalStorage hook. 
+Whenever a note or tag is added, updated or deleted, the useEffect hook is called to update the data in local storage so that it persists between page reloads.
+Finally, the component renders a child component called NoteApp passing it the notesWithTags, onCreateNote, onUpdateNote, onDeleteNote, tags, addTag, updateTag, and deleteTag props. 
+This child component is responsible for rendering the UI for the note-taking app.
+
+
+
+
+
+
+EditNote component:
+
+This is a React functional component called "EditNote" that is used to display a form for editing an existing note. 
+It imports the "NoteData" and "Tag" types from the "App" component, as well as the "NoteForm" component and a custom hook called "useNote" from the "NoteLayout" component.
+The component receives three props: "onSubmit" function, "onAddTag" function, and "availableTags" array. 
+The "onSubmit" function is a callback that will be called when the form is submitted, with the updated note data and the note id as parameters. 
+The "onAddTag" function is a callback that will be called when a new tag is added, with the new tag as a parameter. 
+The "availableTags" array contains all the available tags that can be assigned to the note.
+The component uses the "useNote" hook to get the note data that is being edited, and then renders a "NoteForm" component with the title, markdown, 
+and tags of the note, along with the "onSubmit", "onAddTag", and "availableTags" props passed down to it. It also renders a heading to display "Edit Note" above the form.
+When the "NoteForm" is submitted, the "onSubmit" function is called with the updated note data and the note id. 
+This will trigger the update of the note in the "App" component, which will cause the note to be updated in the UI as well.
+Overall, this application provides a simple and easy-to-use interface for managing notes and tags.
+
+
+
+
+
+
+NewNote component:
+
+This is a component called NewNote which is responsible for rendering a form for creating a new note.
+The component takes in three props:
+onSubmit: a callback function that is called when the form is submitted with the new note data. It takes a single argument, which is an object containing the note data (title, markdown, and tags).
+onAddTag: a callback function that is called when a new tag is added to the note. It takes a single argument, which is the new tag object (id and label).
+availableTags: an array of Tag objects that are available to be added to the note.
+The component itself renders a heading with the text "NewNote" and a NoteForm component. 
+The NoteForm component is passed the onSubmit, onAddTag, and availableTags props so that it can handle form submission and tag management.
+
+
+
+
+
+
+NoteForm component:
+
+Props
+The component takes several props:
+onSubmit: a function that will be called when the form is submitted. It takes a NoteData object that contains the note's title, markdown, and tags.
+onAddTag: a function that will be called when a new tag is created. It takes a Tag object.
+availableTags: an array of Tag objects that are available for selection.
+title: an optional string that represents the note's title.
+markdown: an optional string that represents the note's markdown content.
+tags: an optional array of Tag objects that represent the note's selected tags.
+State:
+The component maintains state for the selected tags using the useState hook. The selectedTags state variable holds an array of Tag objects that represent the currently selected tags.
+Form Submission
+When the form is submitted, the handleSubmit function is called. This function prevents the default form submission behavior, 
+calls the onSubmit prop function with a NoteData object containing the form data, and navigates back to the notes list.
+Form Fields
+The form contains several fields:
+Title: a text input for the note's title.
+Tags: a CreatableReactSelect component for selecting tags. This component allows the user to select from the available tags or create new tags. 
+When a new tag is created, the onAddTag prop function is called, and the selectedTags state variable is updated with the new tag.
+Body: a textarea input for the note's markdown content.
+Buttons
+The form contains two buttons:
+Save: a submit button for saving the note.
+Cancel: a button that navigates back to the notes list without saving the note.
+Refs
+The titleRef and markDownRef refs are created using the useRef hook. These refs are used to get the values of the Title and Body form fields when the form is submitted.
+
+Functions and state in NoteForm component:
+This code defines a React component function that has several local variables defined using the useRef and useState hooks, and uses the useNavigate hook provided by the react-router-dom library.
+The titleRef and markDownRef variables are references to input elements in the component's rendered output. 
+These references are used to obtain the current values of these input elements when the component's form is submitted.
+The selectedTags variable is initialized with the tags array, which is a prop that is passed into the component. 
+This state variable is updated when the user selects one or more tags from a list of available tags.
+The handleSubmit function is called when the component's form is submitted. This function first prevents the default form submission behavior, 
+and then obtains the current values of the title and markdown input elements using the titleRef and markDownRef references. 
+It also includes the currently selected tags in the tags field of the NoteData object that is passed to the onSubmit function. 
+Finally, it uses the navigate function provided by the useNavigate hook to navigate to a different page in the application.
+
+
+
+
+
+
+Note component:
+
+This code defines the Note component, which is responsible for rendering a single note in the note-taking application. 
+The component receives a prop onDelete which is a callback function to be called when the user wants to delete the current note.
+The component uses the useNote hook to obtain the current note being displayed. 
+The useNote hook is defined in the NoteLayout component, which is responsible for providing the note data to all the child components that need it.
+The note's title and tags (if any) are displayed using the react-bootstrap Row, Col, and Badge components. 
+The Edit, Delete, and Back buttons are also displayed using the Button and Link components from react-bootstrap 
+and the useNavigate hook from react-router-dom is used to navigate to the appropriate pages when the buttons are clicked.
+The note's markdown content is rendered using the ReactMarkdown component, which converts markdown text to HTML.
+
+
+
+
+
+
+NoteLayout component:
+
+This code exports a React component called NoteLayout and a custom hook called useNote.
+NoteLayout is a layout component that expects an array of notes as a prop. It uses the useParams hook from react-router-dom to get the id parameter from the current URL. 
+It then finds the note with the corresponding id in the notes array, and if it exists, renders the child routes using the Outlet component from react-router-dom. 
+The Outlet component renders the child route based on the current URL path, and passes the note object as the context prop, which can be accessed using the useOutletContext hook.
+useNote is a custom hook that can be used to access the note object passed as context by the Outlet component in NoteLayout. 
+It uses the useOutletContext hook from react-router-dom to access the note object from the current route's context.
+Together, these components and hooks allow for dynamic routing based on the current note ID, and for easy access to the current note object in child routes.
+
+
+
+
+
+
+NoteList component:
+
+This is a React component that renders a list of notes based on the input notes array and allows filtering by title and tags. 
+The component also has a button to create a new note and edit the available tags.
+The component is defined using the arrow function syntax, which receives an object with several props. These props are destructured in the function definition to get the necessary variables.
+The component returns a JSX expression, which consists of several HTML elements with some custom React components.
+One important thing to notice is the use of useState hook to store the selected tags and the note title values, which are used for filtering the notes. 
+The useMemo hook is also used to compute the filtered notes based on the input values.
+The NoteCard and EditTagsModal components are defined as separate functions within the same file.
+NoteCard is a simple component that receives the title and tags props to render a Card element with the note's title and tags. 
+The Card element is also a Link element that redirects to the note's detail page.
+EditTagsModal is a modal component that receives the available tags, onDeleteTag, onUpdateTag, and handleClose callbacks as props to allow editing the tags' labels and deleting tags. 
+The modal has a form with an input for each tag, and a button to delete the tag. 
+The onDeleteTag and onUpdateTag callbacks are called when the user clicks the delete button or updates the tag label, respectively.
+
+Functions and state in NoteList component:
+This code defines a React component that uses the useState and useMemo hooks to manage state and perform memoized calculations, respectively. Specifically, it defines the following:
+selectedTags state: an array of Tag objects that the user has selected.
+setTitle state: a string representing the user's search query for note titles.
+editTagsModalIsOpen state: a boolean flag indicating whether the "Edit Tags" modal is open.
+filteredNotes memo: a filtered version of the notes array that only includes notes whose titles contain the search query and whose tags match the selected tags.
+Note that the notes array itself is not managed by this component and must be passed in as a prop. Additionally, this code does not define any UI or rendering logic.
+
+
+
+
+
+
+useLocalStorage custom hook:
+
+This is a custom React hook named useLocalStorage. It takes two arguments: key and initialValue. 
+key is a string that will be used as a key to store and retrieve the value in local storage, and initialValue is the initial value that will be returned if the value is not already in local storage.
+Inside the hook, it uses useState to create a state variable called value and a setter function called setValue. 
+The initial value of value is set to the value retrieved from local storage using the key. 
+If there is no value in local storage, it checks if initialValue is a function and calls it to get the initial value, or if it is a value, uses it as the initial value.
+The hook also uses useEffect to update the value in local storage whenever value or key changes. It calls localStorage.setItem with the key and the stringified value of value.
+Finally, the hook returns an array containing value and setValue as its elements. 
+The as [T, typeof setValue] syntax is used to provide the type information for TypeScript, where T is the type of the value stored in local storage.
